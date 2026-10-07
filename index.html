@@ -68,6 +68,20 @@ th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;
 .gain3{font-size:16px;line-height:1.45;max-width:560px;padding-bottom:4px}
 .facts3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:14px}
 .v3{font-size:16px;font-weight:600;margin-top:3px}
+@media (max-width:600px){
+  h1{font-size:20px} h2{font-size:17px} .lead{font-size:15px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .tab{white-space:nowrap;padding:8px 10px;font-size:13px}
+  .tab .lg{display:none}
+  .panel{padding:10px}
+  .controls{gap:8px 10px}
+  .stats{grid-template-columns:repeat(3,1fr);gap:6px}
+  .stat{padding:8px}
+  .stat .k{font-size:10px} .stat .v{font-size:18px}
+  th,td{padding:6px 5px} th{font-size:11px}
+  td:first-child{white-space:nowrap}
+  #s2 th:nth-child(3), #s2 td:nth-child(3){display:none}   /* en el celular queda solo la espera P95 */
+}
 </style>
 </head>
 <body>
@@ -75,9 +89,9 @@ th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;
   <h1>Wi-Fi 8 en tres escenas</h1>
   <p class="sub">Esquemas ilustrativos, no a escala.</p>
   <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-s="s1">1 · Roaming sin cortes</button>
-    <button class="tab" role="tab" aria-selected="false" data-s="s2">2 · Competir vs. coordinar</button>
-    <button class="tab" role="tab" aria-selected="false" data-s="s3">3 · Potencia en Argentina</button>
+    <button class="tab" role="tab" aria-selected="true" data-s="s1">1 · Roaming<span class="lg"> sin cortes</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-s="s2">2 · Competir<span class="lg"> vs. coordinar</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-s="s3">3 · Potencia<span class="lg"> en Argentina</span></button>
   </nav>
 </div></header>
 
@@ -237,7 +251,12 @@ function fit(cv){
   const ctx = cv.getContext('2d'); ctx.setTransform(r,0,0,r,0,0); return {ctx, w, h};
 }
 let C1, C1T, C2, C3;
-function resizeAll(){ C1 = fit($('c1')); C1T = fit($('c1t')); C2 = fit($('c2')); C3 = fit($('c3')); }
+const TX = 14, CW = 16, WMAX = 420;   // escena 2: duración de turno, ventana de backoff, ranuras visibles máximas
+let WIN = WMAX;                       // ranuras visibles; menos en pantallas angostas (se ajusta en resizeAll)
+function resizeAll(){
+  C1 = fit($('c1')); C1T = fit($('c1t')); C2 = fit($('c2')); C3 = fit($('c3'));
+  if (C2.w) WIN = Math.round(Math.min(WMAX, Math.max(150, (C2.w - 70)*0.45)));
+}
 window.addEventListener('resize', resizeAll);
 resizeAll();
 
@@ -338,7 +357,8 @@ function draw1(){
   if (S1.mode === '7'){
     if (s.assoc === 0){
       ctx.fillStyle = css('--bad'); ctx.font = '600 13px system-ui';
-      ctx.fillText('re-asociando y autenticando', cx, yC-34);
+      const msg = 're-asociando y autenticando', half = ctx.measureText(msg).width/2 + 4;
+      ctx.fillText(msg, Math.min(w - half, Math.max(half, cx)), yC-34);
     } else link(s.assoc, css('--a'), 0);
   } else {
     link(s.l5, css('--a'), -4); link(s.l6, css('--g6'), 4);
@@ -384,11 +404,10 @@ reset1();
    ESCENA 2 — Competir vs coordinar (simulación simplificada)
    ========================================================= */
 const S2 = {mode:'7', run:true, useC:true, speed:0.014};   // speed: ranuras por ms
-const TX = 14, CW = 16, WIN = 420;
 let s2;
 function reset2(){
   s2 = {t:0, view:0, blocks:[], last:{A:0,B:0,C:0}, waits:{A:[],B:[],C:[]}, air:{A:0,B:0,C:0}, col:{A:0,B:0,C:0}};
-  s2.view = WIN;   // arranca con la ventana llena
+  s2.view = WMAX;   // arranca con la ventana llena
 }
 seg('m2', v => {S2.mode = v; reset2();});
 $('c2c').addEventListener('change', e => {S2.useC = e.target.checked; reset2();});
