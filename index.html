@@ -126,9 +126,9 @@ th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;
     </div>
   </div>
   <p class="src">Fuentes:
-    <a href="https://doi.org/10.1134/S003294602502005X" target="_blank" rel="noopener">Karamyshev, Levitsky, Bankov y Khorov, "A Tutorial on Wi-Fi 8" (2025)</a>: hoy el roaming puede cortar la conexión hasta 70 ms. En Wi-Fi 8 los access points se pasan por el backhaul el estado del cliente, los números de secuencia y las claves, y los autores advierten que compartir esas claves <em>"demands attention"</em>.
+    <a href="https://doi.org/10.1134/S003294602502005X" target="_blank" rel="noopener">Karamyshev, Levitsky, Bankov y Khorov, "A Tutorial on Wi-Fi 8" (2025)</a>: hoy, al cambiar de access point, el equipo vuelve a negociar la seguridad y a rearmar la conexión, y en algunos casos esos intercambios llevan hasta 70 ms. En Wi-Fi 8 los access points se pasan por el backhaul el estado del cliente, los números de secuencia y las claves, y los autores advierten que compartir esas claves <em>"demands attention"</em>.
     El roaming rápido ya fue atacado en 2017 (<a href="https://www.krackattacks.com/" target="_blank" rel="noopener">Vanhoef, KRACK</a>).
-    Los 70 ms son el peor caso citado, y las cero pérdidas de Wi-Fi 8 son el caso ideal.</p>
+    En la animación, los 70 ms representan ese peor caso, y las cero pérdidas de Wi-Fi 8 son el caso ideal.</p>
 </section>
 
 <!-- ===================== ESCENA 2 ===================== -->
@@ -167,7 +167,7 @@ th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;
     </div>
   </div>
   <p class="src">Simulación simplificada: tráfico continuo, espera al azar de 0 a 15 ranuras y turnos de igual duración. Muestra el mecanismo, no mide.
-    Valores de referencia: <a href="https://arxiv.org/html/2606.13759v1" target="_blank" rel="noopener">Wilhelmi et al., "A Tutorial on IEEE 802.11bn Multi-AP Coordination for Wi-Fi 8" (2026)</a>: con Co-TDMA la espera de las redes coordinadas baja entre 55 y 70%, pero una red vecina que no coordina puede empeorar más del 130%.
+    Valores de referencia: <a href="https://arxiv.org/html/2606.13759v1" target="_blank" rel="noopener">Wilhelmi et al., "A Tutorial on IEEE 802.11bn Multi-AP Coordination for Wi-Fi 8" (2026)</a>: en su simulación con tres redes sobre el mismo canal, Co-TDMA redujo un 55% la espera de las dos redes coordinadas, y la tercera, que no participaba, vio empeorar la suya más del 130%.
     <a href="https://doi.org/10.1134/S003294602502005X" target="_blank" rel="noopener">Karamyshev et al. (2025)</a> advierten lo mismo: Co-TDMA <em>"may unfairly suppress"</em> a las redes vecinas que no participan.</p>
 </section>
 
@@ -199,7 +199,7 @@ th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;
   </div>
   <p class="src">Fuentes:
     <a href="https://www.argentina.gob.ar/normativa/384198_res756_pdf/archivo" target="_blank" rel="noopener">ENACOM, Anexo de la Resolución 756/2023</a>: límites por MHz y totales (24 dBm el celular, 30 dBm el access point).
-    <a href="https://doi.org/10.1134/S003294602502005X" target="_blank" rel="noopener">Karamyshev, Levitsky, Bankov y Khorov, "A Tutorial on Wi-Fi 8" (2025)</a>: repartir las subportadoras (DRU) sirve para esquivar el límite por MHz y da hasta 11 dB de mejora.
+    <a href="https://doi.org/10.1134/S003294602502005X" target="_blank" rel="noopener">Karamyshev, Levitsky, Bankov y Khorov, "A Tutorial on Wi-Fi 8" (2025)</a>: repartir las subportadoras (DRU) sirve para esquivar el límite por MHz y da hasta 11 dB más de potencia con unidades chicas repartidas en 80 MHz.
     Modelo: una porción de 26 subportadoras (~2 MHz) dentro de un canal de 80 MHz; repartidas, cada subportadora cae en un MHz distinto y cada MHz ocupado puede usar su límite completo. Las columnas no están a escala. En espacio libre, +6 dB equivale a duplicar la distancia; en interiores las paredes cambian mucho el resultado.</p>
 </section>
 
@@ -339,7 +339,7 @@ function draw1(){
   ctx.beginPath(); ctx.moveTo(x1,yBH); ctx.lineTo(x2,yBH); ctx.stroke(); ctx.setLineDash([]);
   ctx.beginPath(); ctx.moveTo(x1,yBH); ctx.lineTo(x1,yAP-18); ctx.moveTo(x2,yBH); ctx.lineTo(x2,yAP-18); ctx.stroke();
   ctx.fillStyle = muted; ctx.font = '12px system-ui'; ctx.textAlign = 'center';
-  ctx.fillText('backhaul (red cableada entre AP)', (x1+x2)/2, yBH-8);
+  ctx.fillText('backhaul (red entre los AP)', (x1+x2)/2, yBH-8);
   // APs
   [[x1,'AP 1'],[x2,'AP 2']].forEach(([x,l]) => {
     ctx.fillStyle = css('--panel'); ctx.strokeStyle = ink; ctx.lineWidth = 2;
